@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Test Leaflet simple</title>
+  <title>Carte dynamique Leaflet</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <style>
@@ -18,14 +18,23 @@
 
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
-    const map = L.map('map').setView([48.8566, 2.3522], 13);
+    function getParam(name, fallback = null) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name) || fallback;
+    }
+
+    const lat = parseFloat(getParam('lat', '48.8566'));
+    const lng = parseFloat(getParam('lng', '2.3522'));
+    const title = getParam('title', 'Point par défaut');
+
+    const map = L.map('map').setView([lat, lng], 13);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    L.marker([48.8566, 2.3522]).addTo(map).bindPopup("Paris").openPopup();
+    L.marker([lat, lng]).addTo(map).bindPopup(title).openPopup();
   </script>
 </body>
 </html>
