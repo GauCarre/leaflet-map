@@ -12,8 +12,11 @@
   />
   <style>
     #map {
-      height: 300px;
+      height: 100vh;
       width: 100%;
+    }
+    body {
+      margin: 0;
     }
   </style>
 </head>
@@ -27,29 +30,30 @@
   ></script>
 
   <script>
-    // Fonction pour récupérer un paramètre dans l'URL
     function getParam(param) {
       const urlParams = new URLSearchParams(window.location.search);
       return urlParams.get(param);
     }
 
-    // Récupérer latitude, longitude et titre dans l'URL
-    const lat = parseFloat(getParam("lat")) || 48.8566; // défaut Paris
-    const lng = parseFloat(getParam("lng")) || 2.3522;
+    const lat = parseFloat(getParam("lat"));
+    const lng = parseFloat(getParam("lng"));
     const title = getParam("title") || "Point par défaut";
 
-    // Initialisation de la carte
-    const map = L.map("map").setView([lat, lng], 15);
+    const defaultLat = 48.8566;
+    const defaultLng = 2.3522;
 
-    // Ajouter les tuiles OpenStreetMap
+    const validLat = !isNaN(lat) ? lat : defaultLat;
+    const validLng = !isNaN(lng) ? lng : defaultLng;
+
+    const map = L.map("map").setView([validLat, validLng], 13);
+
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 19,
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(map);
 
-    // Ajouter un marqueur avec popup
-    const marker = L.marker([lat, lng]).addTo(map);
+    const marker = L.marker([validLat, validLng]).addTo(map);
     marker.bindPopup(title).openPopup();
   </script>
 </body>
