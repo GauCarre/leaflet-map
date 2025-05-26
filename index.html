@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Carte dynamique Leaflet</title>
+  <title>Carte Leaflet avec polygone</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <style>
@@ -26,6 +26,8 @@
     const lat = parseFloat(getParam('lat', '48.8566'));
     const lng = parseFloat(getParam('lng', '2.3522'));
     const title = getParam('title', 'Point par défaut');
+    const polygonRaw = getParam('polygon');
+    const polyLabel = getParam('label', 'Zone');
 
     const map = L.map('map').setView([lat, lng], 13);
 
@@ -35,6 +37,17 @@
     }).addTo(map);
 
     L.marker([lat, lng]).addTo(map).bindPopup(title).openPopup();
+
+    if (polygonRaw) {
+      try {
+        const polygon = JSON.parse(polygonRaw);
+        if (Array.isArray(polygon)) {
+          L.polygon(polygon, { color: 'blue' }).addTo(map).bindPopup(polyLabel);
+        }
+      } catch (e) {
+        console.error("Erreur parsing polygon:", e);
+      }
+    }
   </script>
 </body>
 </html>
